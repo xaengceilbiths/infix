@@ -7,6 +7,7 @@
 ;      |  <e> [ <args> ]         application
 ;      |  <e> [[ <e> ]]          list reference
 ;      |  { <args> }             list construction
+;      |  #{ <args> }            vector construction
 ;      |  (λ <ids> . <e>)        lambda
 
 ;      |  <e> + <e>              addition
