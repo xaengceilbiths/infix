@@ -63,6 +63,12 @@
    (check-equal? @${xs[[1]]} 2)
    (check-equal? @${xs[[2]]} 3)))
 
+(test-case
+ "vector reference syntax  vector#[[index]]"
+ (let ([xs (vector 1 2 3)])
+   (check-equal? @${xs#[[0]]} 1)
+   (check-equal? @${xs#[[1]]} 2)
+   (check-equal? @${xs#[[2]]} 3)))
 
 (test-case
  "anonymous function syntax  (λ ids . expr)"
@@ -78,6 +84,13 @@
  (check-equal? @${{1}} '(1))
  (check-equal? @${{1,2}} '(1 2))
  (check-equal? @${{1,2,3}} '(1 2 3)))
+
+(test-case
+ "vector construction syntax #{}"
+ (check-equal? @${#{}} #())
+ (check-equal? @${#{1}} #(1))
+ (check-equal? @${#{1,2}} #(1 2))
+ (check-equal? @${#{1,2,3}} #(1 2 3)))
 
 (test-case
  "addition + with 2 or more arguments"

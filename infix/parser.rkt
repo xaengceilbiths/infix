@@ -17,6 +17,7 @@
 ;      |  <id>                   variable reference
 ;      |  <e> [ <args> ]         application
 ;      |  { <args> }             list construction
+;      |  #{ <args> }            vector construction
 ;      |  <e> + <e>              addition
 ;      |  <e> - <e>              subtraction
 ;      |  <e> * <e>              multiplication
@@ -46,7 +47,9 @@
                                         OP CP    ; ( ) 
                                         OB CB    ; [ ]
                                         OC CC    ; { }
-                                        ODB   ; [[ ]]
+                                        SOC      ; #{ }
+                                        ODB      ; [[ ]]
+                                        SODB     ; #[[ ]]
                                         COMMA    ; ,
                                         SEMI     ; ;
                                         PERIOD   ; .
@@ -100,7 +103,9 @@
    ["]" 'CB]
    ["{" 'OC]
    ["}" 'CC]
+   ["#{" 'SOC]
    ["[[" 'ODB]
+   ["#[[" 'SODB]
    ; ["]]" 'CDB]
    ["," 'COMMA]   
    [";" 'SEMI]
@@ -262,13 +267,15 @@
      [(parenthensis-exp)                            $1])
     
     (construction-exp
-     [(OC args CC)                                  (b o `(,(b o 'list 1 3) ,@$2) 1 3)]         
+     [(OC args CC)                                  (b o `(,(b o 'list 1 3) ,@$2) 1 3)]
+     [(SOC args CC)                                  (b o `(,(b o 'vector 1 3) ,@$2) 1 3)]
      [(OP LAMBDA ids PERIOD exp CP)                 (b o `(,(b o 'lambda 2 2) ,$3 ,$5) 1 6)]
      [(atom)                                        $1])
     
     (application-exp
      [(application-exp OB args CB)              (b o `(,$1 ,@$3) 1 4)]    ; function application
      [(application-exp ODB exp CB CB)           (b o `(,(b o 'list-ref 1 4) ,$1 ,$3) 1 4)] ; list ref
+     [(application-exp SODB exp CB CB)           (b o `(,(b o 'vector-ref 1 4) ,$1 ,$3) 1 4)] ; list ref
      [(construction-exp)                            $1])
 
     #;(implicit-exp
